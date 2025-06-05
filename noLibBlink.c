@@ -32,7 +32,7 @@ int main(){
                                         fd,                     //gpiomem file descriptor
                                         GPIO_OFFSET);           //Start of address for mapping
 
-    if(*gpio == MAP_FAILED){
+    if(gpio == MAP_FAILED){
         perror("Failed to map gpio");
         close(fd);
         return 1;
@@ -49,12 +49,17 @@ int main(){
                                     //setting bits for GPIO 17 (21-23) to 0 / clear
 
     led_reg = led_reg | (1 << 21); //Move 001 to register 21-23 to assign GPIO 17 as an output (https://datasheets.raspberrypi.com/bcm2711/bcm2711-peripherals.pdf p.67)
-    gpio[GPSEL1 /4 ] = led_reg; //Move updated bits 21-23 back into the GPSEL1 register
-    
-    //2. Set gpio 17 to high
-    //3. Delay
-    //4. Set gpio 17 to low
-    //5. Clear gpio 17
-    //6. Close
+    gpio[GPSEL1 / 4 ] = led_reg; //Move updated bits 21-23 back into the GPSEL1 register
 
+    //2. Set gpio 17 to high
+    gpio[GPSET0 / 4] = (1 << 17); //Access the GPIO set function register and change the 17th bit to 1 (HIGH)
+
+    //3. Delay
+    usleep(500000); //Sleep for 500,000 microseconds (0.5 seconds)
+
+    //4. Set gpio 17 to low
+    gpio[GPCLR0 / 4] = (1 << 17); //Access the GPIO clear function register to change the 17th bit to 1 (LOW)
+    
+    //6. Close
+    close(fd);
 }
