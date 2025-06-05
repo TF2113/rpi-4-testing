@@ -51,15 +51,20 @@ int main(){
     led_reg = led_reg | (1 << 21); //Move 001 to register 21-23 to assign GPIO 17 as an output (https://datasheets.raspberrypi.com/bcm2711/bcm2711-peripherals.pdf p.67)
     gpio[GPSEL1 / 4 ] = led_reg; //Move updated bits 21-23 back into the GPSEL1 register
 
-    //2. Set gpio 17 to high
-    gpio[GPSET0 / 4] = (1 << 17); //Access the GPIO set function register and change the 17th bit to 1 (HIGH)
+    for(int i = 0; i < 10; i++){
 
-    //3. Delay
-    usleep(500000); //Sleep for 500,000 microseconds (0.5 seconds)
-
-    //4. Set gpio 17 to low
-    gpio[GPCLR0 / 4] = (1 << 17); //Access the GPIO clear function register to change the 17th bit to 1 (LOW)
+        //2. Set gpio 17 to high
+        gpio[GPSET0 / 4] = (1 << 17); //Access the GPIO set function register and change the 17th bit to 1 (HIGH)
     
+        //3. Delay
+        usleep(500000); //Sleep for 500,000 microseconds (0.5 seconds)
+    
+        //4. Set gpio 17 to low
+        gpio[GPCLR0 / 4] = (1 << 17); //Access the GPIO clear function register to change the 17th bit to 1 (LOW)
+
+        usleep(500000);
+    }
+
     //6. Close
     close(fd);
 }
