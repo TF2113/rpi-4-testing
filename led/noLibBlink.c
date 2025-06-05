@@ -66,6 +66,6 @@ int main(){
     }
 
     //6. Close
-    mummap(gpio, MEM_BLOCK); //Free memory
+    munmap(gpio, MEM_BLOCK); //Free memory
     close(fd); //Close gpiomem file
 }
