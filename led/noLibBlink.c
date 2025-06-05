@@ -16,7 +16,7 @@
 #define GPLEV0 0x34 //GPIO Read Level
 
 int main(){
-    int fd = open("/dev/gpiomem", O_RDWR | O_SYNC); //Opens gpiomem with READ/WRITE perms and flags for SYNC to 
+    int fd = open("/dev/gpiomem", O_RDWR | O_SYNC); //Opens gpiomem with READ/WRITE perms and SYNC flag to 
                                                     //prevent program from continuing before writes are finished
     if(fd < 0){
         perror("Access gpiomem fail\n");
@@ -42,7 +42,7 @@ int main(){
     uint32_t led_reg = gpio[GPSEL1 / 4]; //Access GPSEL1 register
 
     led_reg = led_reg & ~(7 << 21); //Clears the 3 bit address in GPSEL1 corresponding to pin 17 located at bits 21-23 to 000
-                                    //by first setting 3 bits to 111 (decimal 7 in binary) then shifts those bits to the left by 21
+                                    //by first setting 3 bits to 0111 (decimal 7 in binary) then shifts those bits to the left by 21
                                     //then NOT operator '~' flips all bits
                                     //00000111 00000000 00000000 00000000 gets flipped to
                                     //11111000 11111111 11111111 11111111
@@ -66,5 +66,6 @@ int main(){
     }
 
     //6. Close
-    close(fd);
+    mummap(gpio, MEM_BLOCK); //Free memory
+    close(fd); //Close gpiomem file
 }
