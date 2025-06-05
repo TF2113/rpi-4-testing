@@ -1,2 +1,2 @@
-/blink
-/noLibBlink
+/led/blink
+/led/noLibBlink
